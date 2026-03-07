@@ -7,10 +7,11 @@ interface FileUploaderProps {
 }
 
 const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
+  const [inputKey, setInputKey] = useState(0);
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0] || null;
-
       onFileSelect?.(file);
     },
     [onFileSelect],
@@ -28,10 +29,16 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
 
   const file = acceptedFiles[0] || null;
 
+  const handleRemoveFile = () => {
+    onFileSelect?.(null);
+    // Reset the input key to force remount and clear the input value
+    setInputKey((prev) => prev + 1);
+  };
+
   return (
     <div className="w-full gradient-border">
       <div {...getRootProps()}>
-        <input {...getInputProps()} />
+        <input {...getInputProps()} key={inputKey} />
 
         <div className="space-y-4 cursor-pointer">
           {file ? (
@@ -53,7 +60,8 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
               <button
                 className="p-2 cursor-pointer"
                 onClick={(e) => {
-                  onFileSelect?.(null);
+                  e.stopPropagation();
+                  handleRemoveFile();
                 }}
               >
                 <img src="/icons/cross.svg" alt="remove" className="w-4 h-4" />
