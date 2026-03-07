@@ -30,7 +30,7 @@ export default function Home() {
       const parsedResumes = resumes?.map(
         (resume) => JSON.parse(resume.value) as Resume,
       );
-      console.log("parsed Resumes", parsedResumes);
+      // console.log("parsed Resumes", parsedResumes);
 
       setResumes(parsedResumes || []);
       setLoadingResumes(false);
